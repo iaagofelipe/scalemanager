@@ -3,6 +3,7 @@ package br.com.cerubank.scalemanager.controller;
 
 
 
+import br.com.cerubank.scalemanager.dto.EmployeeLevelDTO;
 import br.com.cerubank.scalemanager.exception.ModelNotFoundException;
 import br.com.cerubank.scalemanager.model.EmployeeLevel;
 import br.com.cerubank.scalemanager.request.EmployeeLevelRequest;
@@ -27,6 +28,11 @@ public class EmployeeLevelController {
         return new ResponseEntity<>(employeeLevels, HttpStatus.OK);
     }
 
+    @GetMapping("/find/{employeeLevelCode}")
+    public ResponseEntity<EmployeeLevelDTO> getByEmployeeLevelCode(@PathVariable String employeeLevelCode) {
+        EmployeeLevelDTO dto = employeeLevelService.getByEmployeeLevelCode(employeeLevelCode);
+        return new ResponseEntity<>(dto, HttpStatus.OK);
+    }
 
     @PostMapping("/add")
     public ResponseEntity<?> addEmployeeLevel(@RequestBody EmployeeLevelRequest request) {
@@ -40,10 +46,10 @@ public class EmployeeLevelController {
         return ResponseEntity.ok(request);
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteEmployeeLevel(@PathVariable("id") Long id) {
+    @DeleteMapping("/delete/{employeeLevelCode}")
+    public ResponseEntity<?> deleteEmployeeLevel(@PathVariable("employeeLevelCode") String employeeLevelCode) {
         try {
-            employeeLevelService.deleteEmployeeLevel(id);
+            employeeLevelService.deleteEmployeeLevel(employeeLevelCode);
             return ResponseEntity.ok().build();
         } catch (ModelNotFoundException e) {
             return ResponseEntity.badRequest().body("Level not found in database " + e);

@@ -8,5 +8,5 @@ import java.util.Optional;
 public interface SkillRepository extends JpaRepository<Skill, Long> {
     Optional<Skill> findBySkillCode(String skillCode);
 
-    void deleteSkillById(Long id);
+    void deleteBySkillCode(String skillCode);
 }

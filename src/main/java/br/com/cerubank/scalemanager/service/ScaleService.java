@@ -52,8 +52,8 @@ public class ScaleService {
         newScale.setTypeScale(type.get());
         Scale savedScale = scaleRepository.save(newScale);
 
-        for (String employeeIdentifier : request.getEmployees()) {
-            Optional<Employee> employee = employeeRepository.findByEmployeeIdentifier(employeeIdentifier);
+        for (String employeeCode : request.getEmployees()) {
+            Optional<Employee> employee = employeeRepository.findByEmployeeCode(employeeCode);
             EmployeeScale saveEmployeeScale = new EmployeeScale(savedScale, employee.get());
             employeeScaleRepository.save(saveEmployeeScale);
         }
@@ -70,7 +70,7 @@ public class ScaleService {
                 Scale savedScale = scaleRepository.save(scale);
 
                 for (String employeeCode : request.getEmployees()) {
-                    Optional<Employee> employee = employeeRepository.findByEmployeeIdentifier(employeeCode);
+                    Optional<Employee> employee = employeeRepository.findByEmployeeCode(employeeCode);
                     EmployeeScale updateEmployeeScale = new EmployeeScale(savedScale, employee.get());
                     employeeScaleRepository.save(updateEmployeeScale);
                 }

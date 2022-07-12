@@ -15,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/employee")
+@CrossOrigin(origins = "*")
 public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
@@ -25,9 +26,9 @@ public class EmployeeController {
         return new ResponseEntity<>(employees, HttpStatus.OK);
     }
 
-    @GetMapping("/find/{id}")
-    public ResponseEntity<Employee> getEmployeesById(@PathVariable("id") Long id) {
-        Employee employeeById = employeeService.findEmployeeById(id);
+    @GetMapping("/find/{employeeCode}")
+    public ResponseEntity<Employee> findByEmployeeCode(@PathVariable("employeeCode") String employeeCode) {
+        Employee employeeById = employeeService.findByEmployeeCode(employeeCode);
         return new ResponseEntity<>(employeeById, HttpStatus.OK);
     }
 
@@ -37,16 +38,16 @@ public class EmployeeController {
         return ResponseEntity.ok(request);
     }
 
-    @PutMapping("/update/{employeeIdentifier}")
-    public ResponseEntity<?> updateEmployee(@RequestBody NewEmployeeRequest request, @PathVariable("employeeIdentifier") String employeeIdentifier) {
-       employeeService.updateEmployee(request, employeeIdentifier);
+    @PutMapping("/update/{employeeCode}")
+    public ResponseEntity<?> updateEmployee(@RequestBody NewEmployeeRequest request, @PathVariable("employeeCode") String employeeCode) {
+       employeeService.updateEmployee(request, employeeCode);
         return ResponseEntity.ok(request);
     }
 
-    @DeleteMapping("/delete/{employeeIdentifier}")
-    public ResponseEntity<?> deleteEmployee(@PathVariable("employeeIdentifier") String employeeIdentifier) {
+    @DeleteMapping("/delete/{employeeCode}")
+    public ResponseEntity<?> deleteEmployee(@PathVariable("employeeCode") String employeeCode) {
         try {
-            employeeService.deleteEmployee(employeeIdentifier);
+            employeeService.deleteEmployee(employeeCode);
             return ResponseEntity.ok().build();
         } catch (ModelNotFoundException e) {
             return ResponseEntity.badRequest().body("Employee not found in database" + e);

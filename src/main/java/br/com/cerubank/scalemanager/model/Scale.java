@@ -33,6 +33,7 @@ public class Scale {
     private List<EmployeeScale> employeeScales;
 
     @ManyToOne
+    @JoinColumn(name = "type_scale_id")
     private TypeScale typeScale;
 
 }

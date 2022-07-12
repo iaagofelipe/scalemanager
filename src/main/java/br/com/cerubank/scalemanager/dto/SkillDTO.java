@@ -8,4 +8,6 @@ public class SkillDTO {
     private Integer code;
 
     private String description;
+
+    private String skillCode;
 }

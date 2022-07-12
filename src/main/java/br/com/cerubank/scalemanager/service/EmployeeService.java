@@ -1,6 +1,7 @@
 package br.com.cerubank.scalemanager.service;
 
 
+import br.com.cerubank.scalemanager.dto.EmployeeLevelDTO;
 import br.com.cerubank.scalemanager.dto.EmployeesDTO;
 import br.com.cerubank.scalemanager.exception.ModelNotFoundException;
 import br.com.cerubank.scalemanager.model.Employee;
@@ -36,7 +37,7 @@ public class EmployeeService {
 
     public void addEmployee(NewEmployeeRequest request){
         Employee newEmployee = mapper.map(request, Employee.class);
-        newEmployee.setEmployeeIdentifier(UUID.randomUUID().toString());
+        newEmployee.setEmployeeCode(UUID.randomUUID().toString());
         Optional<EmployeeLevel> levelEmployee = employeeLevelRepository.findByEmployeeLevelCode(request.getLevel());
         newEmployee.setEmployeeLevel(levelEmployee.get());
         for (String identifier : request.getSkillCode()) {
@@ -54,10 +55,9 @@ public class EmployeeService {
                 .collect(Collectors.toList());
         return dtos;
     }
-
-    public void updateEmployee(NewEmployeeRequest request, String employeeIdentifier) {
+    public void updateEmployee(NewEmployeeRequest request, String employeeCode) {
         try {
-            Employee employee = employeeRepository.findByEmployeeIdentifier(employeeIdentifier).orElse(null);
+            Employee employee = employeeRepository.findByEmployeeCode(employeeCode).orElse(null);
 
             if (employee != null) {
                 Optional<EmployeeLevel> levelEmployee = employeeLevelRepository.findByEmployeeLevelCode(request.getLevel());
@@ -74,15 +74,15 @@ public class EmployeeService {
     }
 
     @Transactional
-    public void deleteEmployee(String employeeIdentifier) {
-        Optional<Employee> employee = employeeRepository.findByEmployeeIdentifier(employeeIdentifier);
+    public void deleteEmployee(String employeeCode) {
+        Optional<Employee> employee = employeeRepository.findByEmployeeCode(employeeCode);
         if (employee.isEmpty()) {
-           throw new ModelNotFoundException("Employee not found with id: " + employeeIdentifier);
-        } employeeRepository.deleteByEmployeeIdentifier(employeeIdentifier);
+           throw new ModelNotFoundException("Employee not found with id: " + employeeCode);
+        } employeeRepository.deleteByEmployeeCode(employeeCode);
     }
 
-    public Employee findEmployeeById(Long id) {
-        return employeeRepository.findEmployeeById(id).orElseThrow(
-                () -> new ModelNotFoundException("Employee with id" + id + "was not found"));
+    public Employee findByEmployeeCode(String employeeCode) {
+        return employeeRepository.findByEmployeeCode(employeeCode).orElseThrow(
+                () -> new ModelNotFoundException("Employee with identifier " + employeeCode + " was not found"));
     }
 }

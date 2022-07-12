@@ -21,8 +21,10 @@ public class HoursBank {
     private Integer amountHours;
 
     @ManyToOne
+    @JoinColumn(name = "employee_id")
     private Employee employee;
 
     @ManyToOne
+    @JoinColumn(name = "event_hour_id")
     private EventHour eventHour;
 }

@@ -1,5 +1,6 @@
 package br.com.cerubank.scalemanager.controller;
 
+import br.com.cerubank.scalemanager.dto.TypeScaleDTO;
 import br.com.cerubank.scalemanager.exception.ModelNotFoundException;
 import br.com.cerubank.scalemanager.model.TypeScale;
 import br.com.cerubank.scalemanager.request.NewTypeScaleRequest;
@@ -22,6 +23,12 @@ public class TypeScaleController {
         return ResponseEntity.ok(typeScales);
     }
 
+    @GetMapping("/find/{typeScaleCode}")
+    public ResponseEntity<TypeScaleDTO> getByTypeScaleCode(@PathVariable("typeScaleCode") String typeScaleCode) {
+        TypeScaleDTO dto = typeScaleService.findByTypeScaleCode(typeScaleCode);
+        return ResponseEntity.ok(dto);
+    }
+
     @PostMapping("/add")
     public ResponseEntity<?> addTypeScale(@RequestBody NewTypeScaleRequest request) {
         typeScaleService.addTypeScale(request);
@@ -34,10 +41,10 @@ public class TypeScaleController {
         return ResponseEntity.ok(request);
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteTypeScale(@PathVariable("id") Long id) {
+    @DeleteMapping("/delete/{typeScaleCode}")
+    public ResponseEntity<?> deleteTypeScale(@PathVariable("typeScaleCode") String typeScaleCode) {
         try {
-            typeScaleService.deleteTypeScale(id);
+            typeScaleService.deleteTypeScale(typeScaleCode);
             return ResponseEntity.ok().build();
         } catch (ModelNotFoundException e) {
             return ResponseEntity.badRequest().body("Skill not found in database" + e);

@@ -35,13 +35,15 @@ public class Employee {
     private List<Skill> skills = new ArrayList<>();
 
     @ManyToOne
+    @JoinColumn(name = "employee_level_id")
     private EmployeeLevel employeeLevel;
 
     @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(nullable = false, updatable = false)
-    private String employeeIdentifier;
+    @JoinColumn(name = "employee_code", nullable = false, updatable = false)
+    private String employeeCode;
 
     public void addSkill (Skill skill) {
         skills.add(skill);

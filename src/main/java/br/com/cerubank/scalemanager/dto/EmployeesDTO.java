@@ -18,4 +18,6 @@ public class EmployeesDTO {
 
     private EmployeeLevelDTO level;
 
+    private String employeeCode;
+
 }

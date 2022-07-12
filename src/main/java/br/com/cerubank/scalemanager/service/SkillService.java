@@ -1,5 +1,6 @@
 package br.com.cerubank.scalemanager.service;
 
+import br.com.cerubank.scalemanager.dto.SkillDTO;
 import br.com.cerubank.scalemanager.exception.ModelNotFoundException;
 import br.com.cerubank.scalemanager.model.Skill;
 import br.com.cerubank.scalemanager.repository.SkillRepository;
@@ -12,6 +13,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class SkillService {
@@ -21,8 +23,18 @@ public class SkillService {
 
     ModelMapper mapper = new ModelMapper();
 
-    public List<Skill> findAllSkills() {
-        return skillRepository.findAll();
+    public List<SkillDTO> findAllSkills() {
+        List<Skill> skills = skillRepository.findAll();
+        List<SkillDTO> dto = skills
+                .stream()
+                .map(user -> mapper.map(user, SkillDTO.class))
+                .collect(Collectors.toList());
+        return dto;
+    }
+
+    public SkillDTO findBySkillCode(String skillCode) {
+        Skill skill = skillRepository.findBySkillCode(skillCode).get();
+        return mapper.map(skill, SkillDTO.class);
     }
 
     public void addSkill(NewSkillRequest request) {
@@ -36,7 +48,6 @@ public class SkillService {
             Skill skill = skillRepository.findBySkillCode(skillCode).orElse(null);
 
             if (skill != null) {
-                skill.setCode(request.getCode());
                 skill.setDescription(request.getDescription());
                 skillRepository.save(skill);
             }
@@ -47,11 +58,11 @@ public class SkillService {
     }
 
     @Transactional
-    public void deleteSkill(Long id) {
-        Optional<Skill> skill = skillRepository.findById(id);
+    public void deleteSkill(String skillCode) {
+        Optional<Skill> skill = skillRepository.findBySkillCode(skillCode);
         if (skill.isEmpty()) {
-            throw new ModelNotFoundException("Skill not found with id: " + id);
-        } skillRepository.deleteSkillById(id);
+            throw new ModelNotFoundException("Skill not found with that identifier: " + skillCode);
+        } skillRepository.deleteBySkillCode(skillCode);
     }
 
 

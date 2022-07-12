@@ -1,6 +1,7 @@
 package br.com.cerubank.scalemanager.service;
 
 
+import br.com.cerubank.scalemanager.dto.EmployeeLevelDTO;
 import br.com.cerubank.scalemanager.exception.ModelNotFoundException;
 import br.com.cerubank.scalemanager.model.Employee;
 import br.com.cerubank.scalemanager.model.EmployeeLevel;
@@ -26,8 +27,16 @@ public class EmployeeLevelService {
     public void addEmployeeLevel(EmployeeLevelRequest request) {
         EmployeeLevel employeeLevel = mapper.map(request, EmployeeLevel.class);
         employeeLevel.setEmployeeLevelCode(UUID.randomUUID().toString());
+        Integer codeLevel =  employeeLevelRepository.findMaxEmployeeLevelCodePosition();
+        employeeLevel.setCode(codeLevel + 1);
         employeeLevelRepository.save(employeeLevel);
     }
+
+    public EmployeeLevelDTO getByEmployeeLevelCode (String employeeLevelCode) {
+        EmployeeLevel level = employeeLevelRepository.findByEmployeeLevelCode(employeeLevelCode).get();
+        return mapper.map(level, EmployeeLevelDTO.class);
+    }
+
 
     public List<EmployeeLevel> findAllEmployeesLevel() {
         return employeeLevelRepository.findAll();
@@ -45,11 +54,11 @@ public class EmployeeLevelService {
     }
 
     @Transactional
-    public void deleteEmployeeLevel(Long id) {
-        Optional<EmployeeLevel> employeeLevel = employeeLevelRepository.findById(id);
+    public void deleteEmployeeLevel(String employeeLevelCode) {
+        Optional<EmployeeLevel> employeeLevel = employeeLevelRepository.findByEmployeeLevelCode(employeeLevelCode);
         if (employeeLevel.isEmpty()) {
-            throw new ModelNotFoundException("Level not listed or don't exist with id: " + id);
-        } employeeLevelRepository.deleteEmployeeLevelById(id);
+            throw new ModelNotFoundException("Level not listed or don't exist with identifier: " + employeeLevelCode);
+        } employeeLevelRepository.deleteByEmployeeLevelCode(employeeLevelCode);
     }
 
     public EmployeeLevel findEmployeeLevelById(Long id) {

@@ -8,8 +8,5 @@ import javax.validation.constraints.NotBlank;
 public class NewSkillRequest {
 
     @NotBlank
-    private Integer code;
-
-    @NotBlank
     private String description;
 }

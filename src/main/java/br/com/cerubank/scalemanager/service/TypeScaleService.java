@@ -1,6 +1,7 @@
 package br.com.cerubank.scalemanager.service;
 
 
+import br.com.cerubank.scalemanager.dto.TypeScaleDTO;
 import br.com.cerubank.scalemanager.exception.ModelNotFoundException;
 import br.com.cerubank.scalemanager.model.TypeScale;
 import br.com.cerubank.scalemanager.repository.TypeScaleRepository;
@@ -48,11 +49,15 @@ public class TypeScaleService {
     }
 
     @Transactional
-    public void deleteTypeScale(Long id) {
-        Optional<TypeScale> typeScale = typeScaleRepository.findById(id);
+    public void deleteTypeScale(String typeScaleCode) {
+        Optional<TypeScale> typeScale = typeScaleRepository.findByTypeScaleCode(typeScaleCode);
         if (typeScale.isEmpty()) {
-            throw new ModelNotFoundException("Type not found with id: " + id);
-        } typeScaleRepository.deleteTypeScaleById(id);
+            throw new ModelNotFoundException("Type not found with id: " + typeScaleCode);
+        } typeScaleRepository.deleteByTypeScaleCode(typeScaleCode);
     }
 
+    public TypeScaleDTO findByTypeScaleCode(String typeScaleCode) {
+        TypeScale ts = typeScaleRepository.findByTypeScaleCode(typeScaleCode).get();
+        return mapper.map(ts, TypeScaleDTO.class);
+    }
 }

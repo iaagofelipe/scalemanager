@@ -10,7 +10,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
     Optional<Employee> findEmployeeById(Long id);
 
-    Optional<Employee> findByEmployeeIdentifier(String employeeIdentifier);
+    Optional<Employee> findByEmployeeCode(String employeeCode);
 
-    void deleteByEmployeeIdentifier(String employeeIdentifier);
+    void deleteByEmployeeCode(String employeeCode);
 }

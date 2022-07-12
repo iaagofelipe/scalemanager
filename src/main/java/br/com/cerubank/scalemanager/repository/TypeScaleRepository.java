@@ -11,5 +11,5 @@ public interface TypeScaleRepository extends JpaRepository<TypeScale, Long> {
 
     Optional<TypeScale> findByCode(Integer code);
 
-    void deleteTypeScaleById(Long id);
+    void deleteByTypeScaleCode(String typeScaleCode);
 }
